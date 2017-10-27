@@ -1,19 +1,51 @@
 #include <iostream>
 using namespace std;
 
+template <class T>
+
 class Array 
 {
 	private:
-		int *ptr;
-		int size;
-		int numEl;
+		T* ptr;
+		size_t size;
+		size_t numEl;
 	public:
-		Array ();
-		Array (int SIZE);
-		~Array ();
-		int getSize ();
-		void pushback (int);
-		int& operator[] (int el)
+		Array ()
+		{
+			size = 5;
+			numEl = 0;
+			ptr = new T[size];
+		}
+		Array (size_t SIZE)
+		{
+			size = SIZE;
+			numEl = 0;
+			ptr = new T[size];
+		} 
+		~Array ()
+		{
+			if(ptr)
+				delete [] ptr;
+		}
+		size_t getSize ()
+		{
+			return size;
+		}
+		void pushback (T &newEl)
+		{
+			if (numEl == size)
+			{
+				size*=2;
+				T* ptr1 = new T[size];
+				for (int i=0; i < size; i++)
+					ptr1[i] = ptr[i];
+				delete [] ptr;
+				ptr = ptr1;
+			}
+			ptr[numEl] = newEl;
+			numEl++;
+		}
+		T& operator[] (int el)
 		{
 			if (el>size)
 			{
@@ -30,62 +62,15 @@ class Array
 		}
 };
 
-Array::Array()
-{
-	size = 5;
-	numEl = 0;
-	ptr = new int[size];
-}
-
-Array::Array(int SIZE)
-{
-	size = SIZE;
-	numEl = 0;
-	ptr = new int[size];
-}
-
-Array::~Array()
-{
-  if(ptr) delete [] ptr;
-}
-
-int Array::getSize()
-{
-  return size;
-}
-
-void Array::pushback (int newEl)
-{
-	if (numEl == size)
-	{
-		size*=2;
-		int* ptr1 = new int[size];
-		for (int i=0; i < size; i++)
-			ptr1[i] = ptr[i];
-		delete [] ptr;
-		ptr = ptr1;
-	}
-	ptr[numEl] = newEl;
-	numEl++;
-}
-
-
 int main (int argc, char *argv[])
 {
-	Array A;
-	int sz = A.getSize();
+	Array<int> A;
+	size_t sz = A.getSize();
 	cout << "Size = " << sz << endl;
-	A.pushback(1);
-	A.printArray();
-	A.pushback(2);
-	A.printArray();
-	A.pushback(2);
-	A.printArray();
-	A.pushback(2);
-	A.printArray();
-	A.pushback(2);
-	A.printArray();
-	A.pushback(3);
+	for (int i = 0; i < 10; i++)
+	{
+		A.pushback(i);
+	}
 	A.printArray();
 	cout << "Size = " << A.getSize() << endl;
 	return 0;
